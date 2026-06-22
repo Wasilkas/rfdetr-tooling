@@ -48,6 +48,9 @@ rfdetr-tool train cfg=config.yaml data=./dataset epochs=50
 # С логированием в ClearML
 rfdetr-tool train data=./dataset clearml=true project=my-project run=exp-1
 
+# С локальными весами вместо весов по умолчанию из Roboflow
+rfdetr-tool train data=./dataset weights=./local_weights.pth
+
 # С прямоугольным resolution (letterbox)
 rfdetr-tool train data=./dataset resolution=960x608
 
@@ -71,6 +74,7 @@ rfdetr-tool train data=./dataset resolution=960x608 resize_mode=true
 |----------|-----|--------------|----------|
 | `data` | `str` | **обязательный** | Путь к датасету (COCO или YOLO) |
 | `variant` | `str` | `base` | Вариант модели |
+| `weights` | `str\|None` | `None` | Локальный файл весов (`pretrain_weights`); `None` — веса по умолчанию из Roboflow |
 | `epochs` | `int` | `100` | Количество эпох |
 | `batch_size` | `int` | `4` | Размер батча |
 | `lr` | `float` | `1e-4` | Learning rate декодера |
@@ -317,6 +321,7 @@ from rfdetr_tooling.predict import predict
 train(
     "datasets/my_dataset",
     variant="base",
+    weights="weights/pretrained.pth",  # локальные веса (опционально)
     epochs=80,
     batch_size=8,
     resolution="960x608",
