@@ -49,6 +49,7 @@ rfdetr-tool — CLI для тренировки, валидации и инфе�
   rfdetr-tool train data=./dataset variant=base epochs=100 batch_size=8
   rfdetr-tool train cfg=config.yaml data=./dataset epochs=50
   rfdetr-tool train data=./dataset clearml=true project=my-project run=exp-1
+  rfdetr-tool train data=./dataset weights=./local_weights.pth
   rfdetr-tool predict source=./images weights=model.pth
   rfdetr-tool predict source=./dataset weights=model.pth format=csv
   rfdetr-tool predict source=dir1,dir2,data.yaml weights=model.pth

@@ -56,6 +56,7 @@ class TrainConfig(BaseModel):
 
     data: str
     variant: Variant = "base"
+    weights: str | None = None
 
     # Обучение
     epochs: int = 100

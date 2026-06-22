@@ -73,6 +73,7 @@ def train(  # noqa: PLR0913, C901
     data: str,
     *,
     variant: Literal["nano", "small", "base", "medium", "large"] = "base",
+    weights: str | None = None,
     epochs: int = 100,
     batch_size: int = 4,
     lr: float = 1e-4,
@@ -114,6 +115,8 @@ def train(  # noqa: PLR0913, C901
     Args:
         data: Путь к директории датасета (COCO или YOLO формат).
         variant: Вариант архитектуры RF-DETR.
+        weights: Путь к локальному файлу весов (pretrain_weights). Если None,
+            используются веса по умолчанию из репозитория Roboflow.
         epochs: Количество эпох.
         batch_size: Размер батча.
         lr: Learning rate для декодера.
@@ -161,7 +164,15 @@ def train(  # noqa: PLR0913, C901
         scalar_resolution = resolution
 
     model_cls = _get_model_class(variant)
-    model = model_cls()
+    model_init_kwargs: dict[str, Any] = {}
+    if weights is not None:
+        weights_path = Path(weights).resolve()
+        if not weights_path.exists():
+            msg = f"Файл весов не найден: {weights_path}"
+            raise FileNotFoundError(msg)
+        model_init_kwargs["pretrain_weights"] = str(weights_path)
+        logger.info(f"Загрузка локальных весов: {weights_path}")
+    model = model_cls(**model_init_kwargs)
 
     # Собираем kwargs для rfdetr
     all_params: dict[str, Any] = {
